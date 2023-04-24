@@ -65,5 +65,23 @@ public class UserController {
     }
 
     public void followUser(String[] inputParts) {
+        if (inputParts.length < 2) {
+            System.out.println("Invalid input. Usage: followUser followUserId expects 2 words separated in the fashion");
+            return;
+        }
+        String followUserEmail = inputParts[1];
+        User user = Session.getSession().getUser();
+        if (user == null) {
+            System.out.println("Please login first.......");
+            return;
+        }
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setCurrentUser(user);
+        userDTO.setFollowUserEmail(followUserEmail);
+
+        userService.followUser(userDTO);
+
+
     }
 }

@@ -23,10 +23,10 @@ public class User extends BaseModel{
     @OneToMany(mappedBy = "author")
     private List<Post> posts;
 
-//    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private Set<FollowerFollowing> following = new HashSet<>();
-//
-//    @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private Set<FollowerFollowing> followers = new HashSet<>();
+    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<FollowerFollowing> following = new HashSet<>();
+
+    @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<FollowerFollowing> followers = new HashSet<>();
 
 }

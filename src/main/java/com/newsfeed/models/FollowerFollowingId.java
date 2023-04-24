@@ -14,5 +14,10 @@ public class FollowerFollowingId implements Serializable {
     private long followerId;
     private long followingId;
 
+    public FollowerFollowingId() {
 
+    }
+
+    public FollowerFollowingId(long id, long id1) {
+    }
 }
