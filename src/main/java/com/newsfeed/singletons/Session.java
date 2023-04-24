@@ -19,7 +19,7 @@ public class Session{
             synchronized(Session.class){
                 if(session == null){
                     session = new Session();
-                    System.out.println("A new session was created");
+//                    System.out.println("A new session was created");
                 }
 
             }

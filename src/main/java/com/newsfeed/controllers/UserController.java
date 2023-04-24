@@ -56,6 +56,12 @@ public class UserController {
 
 
     public void logout() {
+        if(Session.getSession().getUser() == null){
+            System.out.println("Already logged out.......");
+            return;
+        }
+        Session.getSession().setUser(null);
+        System.out.println("Logout successful........");
     }
 
     public void followUser(String[] inputParts) {
