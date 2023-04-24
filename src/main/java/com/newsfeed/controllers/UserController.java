@@ -33,20 +33,25 @@ public class UserController {
     }
 
     public void login(String[] userInput) {
-//        if (userInput.length < 3) {
-//            System.out.println("Invalid input. Usage: login email password expects 3 words separated in the fashion");
-//            return;
-//        }
-//        String email = userInput[1];
-//        String password = userInput[2];
-//
-//        User user = userService.login(email, password);
-//        if (user != null) {
-//            Session.getSession().setUser(user);
-//            System.out.println("Login successful........");
-//        } else {
-//            System.out.println("Login failed. Invalid email or password....... retry again");
-//        }
+        if (userInput.length < 3) {
+            System.out.println("Invalid input. Usage: login email password expects 3 words separated in the fashion");
+            return;
+        }
+        String email = userInput[1];
+        String password = userInput[2];
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setPassword(password);
+        userDTO.setEmail(email);
+
+
+        User user = userService.login(userDTO);
+        if (user != null) {
+            Session.getSession().setUser(user);
+            System.out.println("Login successful........");
+        } else {
+            System.out.println("Login failed. Invalid email or password....... retry again");
+        }
     }
 
 
