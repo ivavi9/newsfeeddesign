@@ -10,7 +10,7 @@ public class SortByCommentCount implements ShowNewsFeedStrategy{
 
         posts.sort((o1, o2) -> o2.getComments().size() - o1.getComments().size());
 
-        System.out.println("Sorting by comment count");
+        System.out.println("Sorting by comment count, higher the better");
 
 
     }

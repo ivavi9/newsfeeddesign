@@ -14,6 +14,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+
+/**
+ * A service class that handles operations related to posts such as creating, replying to, and voting on posts.
+ * It also includes a method to display the user's newsfeed based on the posts from users they follow.
+ */
 @Service
 public class PostService {
     @Autowired
@@ -25,6 +30,12 @@ public class PostService {
     @Autowired
     CommentRepository commentRepository;
 
+
+    /**
+     * Creates a new post with the provided content and current user as the author.
+     *
+     * postDTO Data transfer object containing the post content.
+     */
     public void createPost(PostDTO postDTO) {
         Post post = new Post();
         post.setContent(postDTO.getReplyText());
@@ -33,8 +44,14 @@ public class PostService {
         System.out.println("Post created successfully");
     }
 
+    /**
+     * Replies to an existing post by creating a new comment.
+     *
+     * postDTO Data transfer object containing the post ID and reply content.
+     */
     public void replyToPost(PostDTO postDTO) {
 
+        // Find the post by ID
         Optional<Post> optionalPost = postRepository.findById(postDTO.getPostId());
         if (!optionalPost.isPresent()) {
             System.out.println("Post not found");
@@ -42,6 +59,7 @@ public class PostService {
         }
 
         Post post = optionalPost.get();
+        // Create a new comment with the current user as the commenter and the post as the parent
 
         Comment comment = new Comment();
         comment.setCommenter(Session.getSession().getUser());
@@ -50,7 +68,15 @@ public class PostService {
         commentRepository.save(comment);
     }
 
+
+    /**
+     * Votes on a post, either upvoting or downvoting.
+     *
+     * postDTO Data transfer object containing the post ID and the vote type.
+     */
     public void voteOnPost(PostDTO postDTO) {
+
+        // Find the post by ID
         Optional<Post> optionalPost = postRepository.findById(postDTO.getPostId());
         if (!optionalPost.isPresent()) {
             System.out.println("Post not found");
@@ -58,9 +84,13 @@ public class PostService {
         }
         Post post = optionalPost.get();
 
+        // Check if the user has already voted on the post
         Optional<PostVote> optionalPostVote = voteRepository.findByPostAndVoter(post, Session.getSession().getUser());
 
+        // If the user has already voted, update the vote type and vote counts
         if(optionalPostVote.isPresent()) {
+
+
             PostVote vote = optionalPostVote.get();
             if (vote.getVoteType() == postDTO.getVoteType()) {
                 System.out.println("You have already voted on this post in the same way");
@@ -80,7 +110,7 @@ public class PostService {
             return;
         }
 
-
+        // If the user hasn't voted yet, create a new vote and update the vote counts
         PostVote postVote = new PostVote();
         postVote.setPost(post);
         postVote.setVoteType(postDTO.getVoteType());
@@ -99,77 +129,26 @@ public class PostService {
 
     }
 
+    /**
+     * Retrieves and sorts the newsfeed for the current user based on the users they follow.
+     *
+     * postDTO Data transfer object containing the sorting strategy for the newsfeed.
+     * return A list of sorted posts for the user's newsfeed.
+     */
     @Transactional
     public List<Post> showNewsFeed(PostDTO postDTO) {
         User currentUserId = Session.getSession().getUser();
 
+        // Find the posts from users that the current user follows
         List<Post> posts = postRepository.findPostsByUserFollowing(currentUserId);
+
+        // Sort the posts based on the provided sorting strategy
         postDTO.getShowNewsFeedStrategy().sort_news(posts);
 //        System.out.println(posts);
+
+        // Return the sorted posts
         return posts;
 
     }
 
-    public void replyToComment(PostDTO postDTO) {
-
-        Optional<Comment> optionalComment = commentRepository.findById(postDTO.getCommentId());
-        if (!optionalComment.isPresent()) {
-            System.out.println("Comment not found");
-            return;
-        }
-
-        Comment comment = optionalComment.get();
-
-        Post post = comment.getPost();
-
-        Comment reply = new Comment();
-        reply.setCommenter(Session.getSession().getUser());
-        reply.setPost(post);
-        reply.setReplyText(postDTO.getReplyText());
-        reply.setParentComment(comment);
-        commentRepository.save(reply);
-    }
-
-    public void voteOnComment(PostDTO postDTO) {
-        Optional<Comment> optionalComment = commentRepository.findById(postDTO.getCommentId());
-        if (!optionalComment.isPresent()) {
-            System.out.println("Comment not found");
-            return;
-        }
-        Comment comment = optionalComment.get();
-
-        Optional<CommentVote> optionalCommentVote = voteRepository.findByCommentAndVoter(comment, Session.getSession().getUser());
-
-        if(optionalCommentVote.isPresent()) {
-            CommentVote vote = optionalCommentVote.get();
-            if (vote.getVoteType() == postDTO.getVoteType()) {
-                System.out.println("You have already voted on this comment in the same way");
-            } else {
-                if (postDTO.getVoteType() == VoteType.UPVOTE) {
-                    comment.setUpVoteCount(comment.getUpVoteCount() + 1);
-                    comment.setDownVoteCount(comment.getDownVoteCount() - 1);
-                } else {
-                    comment.setUpVoteCount(comment.getUpVoteCount() - 1);
-                    comment.setDownVoteCount(comment.getDownVoteCount() + 1);
-
-                }
-                vote.setVoteType(postDTO.getVoteType());
-                voteRepository.save(vote);
-                commentRepository.save(comment);
-            }
-            return;
-        }
-        CommentVote commentVote = new CommentVote();
-        commentVote.setComment(comment);
-        commentVote.setVoteType(postDTO.getVoteType());
-        commentVote.setVoter(Session.getSession().getUser());
-        if (postDTO.getVoteType() == VoteType.UPVOTE) {
-            comment.setUpVoteCount(comment.getUpVoteCount() + 1);
-        }else{
-            comment.setDownVoteCount(comment.getDownVoteCount()+1);
-        }
-        voteRepository.save(commentVote);
-        commentRepository.save(comment);
-//        System.out.println("here");
-    }
 }

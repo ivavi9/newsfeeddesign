@@ -19,6 +19,8 @@ public class PostController {
     @Autowired
     PostService postService;
 
+
+    // Method to format the time difference between the post creation time and now
     private String formatTimeDifference(Date postCreationTime) {
         long diff = new Date().getTime() - postCreationTime.getTime();
         long seconds = diff / 1000;
@@ -43,7 +45,7 @@ public class PostController {
         }
     }
 
-
+    // Method to create a new post
     public void createPost(String[] userInput) {
         if (userInput.length < 2) {
             System.out.println("Invalid input. Usage: post content");
@@ -66,6 +68,7 @@ public class PostController {
 
     }
 
+    // Method to reply to a post
     public void replyToPost(String[] inputParts) {
         if(inputParts.length < 3) {
             System.out.println("Invalid input. Usage: reply postId comment");
@@ -83,7 +86,7 @@ public class PostController {
         postService.replyToPost(postDTO);
 
     }
-
+    // Method to vote on a post
     public void voteOnPost(String[] inputParts) {
         if(inputParts.length < 2) {
             System.out.println("Invalid input. Usage: vote postId");
@@ -101,6 +104,7 @@ public class PostController {
 
     }
 
+    // Method to show news feed based on the selected strategy
     public void showNewsFeed(String[] inputParts) {
         if(inputParts.length < 2) {
             System.out.println("Invalid input. Usage: showNewsFeed strategy");
@@ -130,41 +134,8 @@ public class PostController {
         }
     }
 
-    public void replyToComment(String[] userInput) {
-        if(userInput.length < 3) {
-            System.out.println("Invalid input. Usage: replycomment commentId comment");
-            return;
-        }
-        PostDTO postDTO = new PostDTO();
-        postDTO.setCommentId(Long.parseLong(userInput[1]));
-        StringBuilder stringBuilder = new StringBuilder();
-        for(int i = 2; i < userInput.length; i++) {
-            stringBuilder.append(userInput[i]);
-            if(i != userInput.length - 1)
-                stringBuilder.append(" ");
-        }
-        postDTO.setReplyText(stringBuilder.toString());
-        postService.replyToComment(postDTO);
 
-    }
-
-    public void voteOnComment(String[] userInput) {
-        if(userInput.length < 2) {
-            System.out.println("Invalid input. Usage: votecomment commentId");
-            return;
-        }
-        PostDTO postDTO = new PostDTO();
-        postDTO.setCommentId(Long.parseLong(userInput[1]));
-
-        if(userInput[0] .equals("upvotecomment")) {
-            postDTO.setVoteType(VoteType.UPVOTE);
-        } else if (userInput[0].equals("downvotecomment")) {
-            postDTO.setVoteType(VoteType.DOWNVOTE);
-        }
-        postService.voteOnComment(postDTO);
-
-    }
-
+    // Method for experiments (not implemented)
     public void experiment(String[] userInput) {
 //        User user = Session.getSession().getUser();
 //        System.out.println(user.getFollowing());

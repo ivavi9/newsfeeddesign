@@ -10,5 +10,6 @@ public class SortByFollowedUsers implements ShowNewsFeedStrategy{
         posts.sort((o1, o2) ->
              o2.getAuthor().getFollowers().size() - o1.getAuthor().getFollowers().size()
         );
+        System.out.println("Sorted by followed users count, higher the better");
     }
 }

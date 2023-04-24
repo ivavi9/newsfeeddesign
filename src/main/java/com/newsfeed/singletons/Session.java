@@ -4,6 +4,10 @@ import com.newsfeed.models.User;
 
 import java.util.Date;
 
+/**
+ * A singleton class that maintains a session for the logged-in user.
+ * It stores the user information and provides methods to access and manipulate it.
+ */
 public class Session{
 
     private static Session session;

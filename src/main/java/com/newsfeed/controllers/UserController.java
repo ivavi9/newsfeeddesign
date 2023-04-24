@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     @Autowired
     UserService userService;
+
+    // Method to sign up a new user
     public void signup(String[] userInput) {
         if (userInput.length < 4) {
             System.out.println("Invalid input. Usage: signup name email password expects 3 words separated in the fashion");
@@ -32,6 +34,8 @@ public class UserController {
 
     }
 
+
+    // Method to log in a user
     public void login(String[] userInput) {
         if (userInput.length < 3) {
             System.out.println("Invalid input. Usage: login email password expects 3 words separated in the fashion");
@@ -55,6 +59,7 @@ public class UserController {
     }
 
 
+    // Method to log out a user
     public void logout() {
         if(Session.getSession().getUser() == null){
             System.out.println("Already logged out.......");
@@ -64,6 +69,7 @@ public class UserController {
         System.out.println("Logout successful........");
     }
 
+    // Method to follow another user
     public void followUser(String[] inputParts) {
         if (inputParts.length < 2) {
             System.out.println("Invalid input. Usage: followUser followUserId expects 2 words separated in the fashion");

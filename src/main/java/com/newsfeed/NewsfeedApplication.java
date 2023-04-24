@@ -1,5 +1,6 @@
 package com.newsfeed;
 
+import com.newsfeed.controllers.CommentController;
 import com.newsfeed.controllers.PostController;
 import com.newsfeed.controllers.UserController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.util.Scanner;
 
+// Enable JPA auditing and Spring Boot application
 @EnableJpaAuditing
 @SpringBootApplication
 public class NewsfeedApplication implements CommandLineRunner{
@@ -18,24 +20,32 @@ public class NewsfeedApplication implements CommandLineRunner{
     @Autowired
     PostController postController;
 
+    @Autowired
+    CommentController commentController;
 
+    // Initialize the Scanner to read user input
     Scanner scanner = new Scanner(System.in);
 
-
+    // Main method to start the application
     public static void main(String[] args) {
         SpringApplication.run(NewsfeedApplication.class, args);
         Scanner scanner = new Scanner(System.in);
 
     }
 
+
+    // This method is called after the application starts
     @Override
     public void run(String ...args){
 
+        // Run the command loop until the user exits the application
         while (true) {
             System.out.print(">>> ");
             String input = scanner.nextLine();
             String[] userInput = input.split(" ");
             String command = userInput[0].toLowerCase();
+
+            // Process the user's command
             switch (command) {
                 case "signup":
                     userController.signup(userInput);
@@ -60,11 +70,11 @@ public class NewsfeedApplication implements CommandLineRunner{
                     postController.voteOnPost(userInput);
                     break;
                 case "replycomment":
-                    postController.replyToComment(userInput);
+                    commentController.replyToComment(userInput);
                     break;
                 case "upvotecomment":
                 case "downvotecomment":
-                    postController.voteOnComment(userInput);
+                    commentController.voteOnComment(userInput);
                     break;
                 case "shownewsfeed":
                     postController.showNewsFeed(userInput);
