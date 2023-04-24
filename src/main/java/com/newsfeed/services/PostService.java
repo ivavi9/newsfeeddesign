@@ -129,4 +129,47 @@ public class PostService {
         reply.setParentComment(comment);
         commentRepository.save(reply);
     }
+
+    public void voteOnComment(PostDTO postDTO) {
+        Optional<Comment> optionalComment = commentRepository.findById(postDTO.getCommentId());
+        if (!optionalComment.isPresent()) {
+            System.out.println("Comment not found");
+            return;
+        }
+        Comment comment = optionalComment.get();
+
+        Optional<CommentVote> optionalCommentVote = voteRepository.findByCommentAndVoter(comment, Session.getSession().getUser());
+
+        if(optionalCommentVote.isPresent()) {
+            CommentVote vote = optionalCommentVote.get();
+            if (vote.getVoteType() == postDTO.getVoteType()) {
+                System.out.println("You have already voted on this comment in the same way");
+            } else {
+                if (postDTO.getVoteType() == VoteType.UPVOTE) {
+                    comment.setUpVoteCount(comment.getUpVoteCount() + 1);
+                    comment.setDownVoteCount(comment.getDownVoteCount() - 1);
+                } else {
+                    comment.setUpVoteCount(comment.getUpVoteCount() - 1);
+                    comment.setDownVoteCount(comment.getDownVoteCount() + 1);
+
+                }
+                vote.setVoteType(postDTO.getVoteType());
+                voteRepository.save(vote);
+                commentRepository.save(comment);
+            }
+            return;
+        }
+        CommentVote commentVote = new CommentVote();
+        commentVote.setComment(comment);
+        commentVote.setVoteType(postDTO.getVoteType());
+        commentVote.setVoter(Session.getSession().getUser());
+        if (postDTO.getVoteType() == VoteType.UPVOTE) {
+            comment.setUpVoteCount(comment.getUpVoteCount() + 1);
+        }else{
+            comment.setDownVoteCount(comment.getDownVoteCount()+1);
+        }
+        voteRepository.save(commentVote);
+        commentRepository.save(comment);
+//        System.out.println("here");
+    }
 }

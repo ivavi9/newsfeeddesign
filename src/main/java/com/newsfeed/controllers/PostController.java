@@ -149,6 +149,20 @@ public class PostController {
     }
 
     public void voteOnComment(String[] userInput) {
+        if(userInput.length < 2) {
+            System.out.println("Invalid input. Usage: votecomment commentId");
+            return;
+        }
+        PostDTO postDTO = new PostDTO();
+        postDTO.setCommentId(Long.parseLong(userInput[1]));
+
+        if(userInput[0] .equals("upvotecomment")) {
+            postDTO.setVoteType(VoteType.UPVOTE);
+        } else if (userInput[0].equals("downvotecomment")) {
+            postDTO.setVoteType(VoteType.DOWNVOTE);
+        }
+        postService.voteOnComment(postDTO);
+
     }
 
     public void experiment(String[] userInput) {
