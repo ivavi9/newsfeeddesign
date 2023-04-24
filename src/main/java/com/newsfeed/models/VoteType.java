@@ -1,2 +1,5 @@
-package com.newsfeed.models;public record VoteType() {
+package com.newsfeed.models;
+
+public enum VoteType {
+    UPVOTE, DOWNVOTE,
 }

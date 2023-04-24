@@ -1,4 +1,4 @@
-package com.newsfeed.strategies;
+package com.newsfeed.strategies.shownewsfeed;
 
 import com.newsfeed.models.Post;
 
