@@ -131,6 +131,21 @@ public class PostController {
     }
 
     public void replyToComment(String[] userInput) {
+        if(userInput.length < 3) {
+            System.out.println("Invalid input. Usage: replycomment commentId comment");
+            return;
+        }
+        PostDTO postDTO = new PostDTO();
+        postDTO.setCommentId(Long.parseLong(userInput[1]));
+        StringBuilder stringBuilder = new StringBuilder();
+        for(int i = 2; i < userInput.length; i++) {
+            stringBuilder.append(userInput[i]);
+            if(i != userInput.length - 1)
+                stringBuilder.append(" ");
+        }
+        postDTO.setReplyText(stringBuilder.toString());
+        postService.replyToComment(postDTO);
+
     }
 
     public void voteOnComment(String[] userInput) {

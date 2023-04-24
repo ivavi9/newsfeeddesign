@@ -109,4 +109,24 @@ public class PostService {
         return posts;
 
     }
+
+    public void replyToComment(PostDTO postDTO) {
+
+        Optional<Comment> optionalComment = commentRepository.findById(postDTO.getCommentId());
+        if (!optionalComment.isPresent()) {
+            System.out.println("Comment not found");
+            return;
+        }
+
+        Comment comment = optionalComment.get();
+
+        Post post = comment.getPost();
+
+        Comment reply = new Comment();
+        reply.setCommenter(Session.getSession().getUser());
+        reply.setPost(post);
+        reply.setReplyText(postDTO.getReplyText());
+        reply.setParentComment(comment);
+        commentRepository.save(reply);
+    }
 }
