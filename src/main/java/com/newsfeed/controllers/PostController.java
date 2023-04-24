@@ -26,7 +26,7 @@ public class PostController {
             if(i!= userInput.length-1)
                 content.append(" ");
         }
-        postDTO.setContent(content.toString());
+        postDTO.setReplyText(content.toString());
         postService.createPost(postDTO);
 
 
@@ -35,6 +35,21 @@ public class PostController {
     }
 
     public void replyToPost(String[] inputParts) {
+        if(inputParts.length < 3) {
+            System.out.println("Invalid input. Usage: reply postId comment");
+            return;
+        }
+        PostDTO postDTO = new PostDTO();
+        postDTO.setPostId(Long.parseLong(inputParts[1]));
+        StringBuilder stringBuilder = new StringBuilder();
+        for(int i = 2; i < inputParts.length; i++) {
+            stringBuilder.append(inputParts[i]);
+            if(i != inputParts.length - 1)
+                stringBuilder.append(" ");
+        }
+        postDTO.setReplyText(stringBuilder.toString());
+        postService.replyToPost(postDTO);
+
     }
 
     public void voteOnPost(String[] inputParts) {

@@ -6,5 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PostDTO {
-    private String content;
+
+    private long postId;
+    private String replyText;
 }
