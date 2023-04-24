@@ -61,7 +61,7 @@ public class UserService {
 
         FollowerFollowingId id = new FollowerFollowingId(currentUser.getId(),followUser.getId());
 
-        if (followerFollowingRepository.existsById(id)) {
+        if (followerFollowingRepository.existsByFollowerIdAndFollowingId(currentUser.getId(), followUser.getId())) {
             System.out.println("You are already following this user.");
             return;
         } else {

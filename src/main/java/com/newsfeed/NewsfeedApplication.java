@@ -59,9 +59,20 @@ public class NewsfeedApplication implements CommandLineRunner{
                 case "downvote":
                     postController.voteOnPost(userInput);
                     break;
+                case "replycomment":
+                    postController.replyToComment(userInput);
+                    break;
+                case "upvotecomment":
+                case "downvotecomment":
+                    postController.voteOnComment(userInput);
+                    break;
                 case "shownewsfeed":
                     postController.showNewsFeed(userInput);
                     break;
+                case "experiment":
+                    postController.experiment(userInput);
+                    break;
+
                 case "exit":
                     System.out.println("Exiting from the application...");
                     scanner.close();

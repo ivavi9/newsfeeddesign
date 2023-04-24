@@ -1,10 +1,7 @@
 package com.newsfeed.services;
 
 import com.newsfeed.dtos.PostDTO;
-import com.newsfeed.models.Comment;
-import com.newsfeed.models.Post;
-import com.newsfeed.models.PostVote;
-import com.newsfeed.models.VoteType;
+import com.newsfeed.models.*;
 import com.newsfeed.repositories.CommentRepository;
 import com.newsfeed.repositories.PostRepository;
 import com.newsfeed.repositories.VoteRepository;
@@ -12,7 +9,10 @@ import com.newsfeed.singletons.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService {
@@ -96,6 +96,17 @@ public class PostService {
         voteRepository.save(postVote);
         postRepository.save(post);
 
+
+    }
+
+    @Transactional
+    public List<Post> showNewsFeed(PostDTO postDTO) {
+        User currentUserId = Session.getSession().getUser();
+
+        List<Post> posts = postRepository.findPostsByUserFollowing(currentUserId);
+        postDTO.getShowNewsFeedStrategy().sort_news(posts);
+//        System.out.println(posts);
+        return posts;
 
     }
 }

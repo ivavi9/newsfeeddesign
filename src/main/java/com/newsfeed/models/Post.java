@@ -22,4 +22,13 @@ public class Post extends BaseModel{
     @OneToMany(mappedBy = "post")
     private List<Comment> comments;
 
+    @Override
+    public String toString() {
+        return "Post{" +
+                "content='" + content + '\'' +
+                ", author=" + author +
+                ", upVoteCount=" + upVoteCount +
+                ", downVoteCount=" + downVoteCount +
+                '}';
+    }
 }
