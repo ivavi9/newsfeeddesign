@@ -1,6 +1,6 @@
 package com.newsfeed.services;
 
-import com.newsfeed.dtos.PostDTO;
+import com.newsfeed.dtos.CommentDTO;
 import com.newsfeed.models.Comment;
 import com.newsfeed.models.CommentVote;
 import com.newsfeed.models.Post;
@@ -32,7 +32,7 @@ public class CommentService {
      *
      * postDTO Data transfer object containing the comment ID and reply content.
      */
-    public void replyToComment(PostDTO postDTO) {
+    public void replyToComment(CommentDTO postDTO) {
 
         // Find the comment by ID
         Optional<Comment> optionalComment = commentRepository.findById(postDTO.getCommentId());
@@ -60,7 +60,7 @@ public class CommentService {
      *
      * postDTO Data transfer object containing the comment ID and the vote type.
      */
-    public void voteOnComment(PostDTO postDTO) {
+    public void voteOnComment(CommentDTO postDTO) {
 
         // Find the comment by ID
         Optional<Comment> optionalComment = commentRepository.findById(postDTO.getCommentId());

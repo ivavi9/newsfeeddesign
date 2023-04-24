@@ -1,5 +1,6 @@
 package com.newsfeed.controllers;
 
+import com.newsfeed.dtos.CommentDTO;
 import com.newsfeed.dtos.PostDTO;
 import com.newsfeed.models.VoteType;
 import com.newsfeed.services.CommentService;
@@ -21,16 +22,16 @@ public class CommentController {
             System.out.println("Invalid input. Usage: replycomment commentId comment");
             return;
         }
-        PostDTO postDTO = new PostDTO();
-        postDTO.setCommentId(Long.parseLong(userInput[1]));
+        CommentDTO commentDTO = new CommentDTO();
+        commentDTO.setCommentId(Long.parseLong(userInput[1]));
         StringBuilder stringBuilder = new StringBuilder();
         for(int i = 2; i < userInput.length; i++) {
             stringBuilder.append(userInput[i]);
             if(i != userInput.length - 1)
                 stringBuilder.append(" ");
         }
-        postDTO.setReplyText(stringBuilder.toString());
-        commentService.replyToComment(postDTO);
+        commentDTO.setReplyText(stringBuilder.toString());
+        commentService.replyToComment(commentDTO);
 
     }
 
@@ -40,7 +41,7 @@ public class CommentController {
             System.out.println("Invalid input. Usage: votecomment commentId");
             return;
         }
-        PostDTO postDTO = new PostDTO();
+        CommentDTO postDTO = new CommentDTO();
         postDTO.setCommentId(Long.parseLong(userInput[1]));
 
         if(userInput[0] .equals("upvotecomment")) {
