@@ -1,6 +1,9 @@
 package com.newsfeed.controllers;
 
 import com.newsfeed.dtos.PostDTO;
+import com.newsfeed.models.PostVote;
+import com.newsfeed.models.Vote;
+import com.newsfeed.models.VoteType;
 import com.newsfeed.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,6 +56,20 @@ public class PostController {
     }
 
     public void voteOnPost(String[] inputParts) {
+        if(inputParts.length < 2) {
+            System.out.println("Invalid input. Usage: vote postId");
+            return;
+        }
+        PostDTO postDTO = new PostDTO();
+        postDTO.setPostId(Long.parseLong(inputParts[1]));
+
+        if(inputParts[0] .equals("upvote")) {
+            postDTO.setVoteType(VoteType.UPVOTE);
+        } else if (inputParts[0].equals("downvote")) {
+            postDTO.setVoteType(VoteType.DOWNVOTE);
+        }
+        postService.voteOnPost(postDTO);
+
     }
 
     public void showNewsFeed(String[] inputParts) {

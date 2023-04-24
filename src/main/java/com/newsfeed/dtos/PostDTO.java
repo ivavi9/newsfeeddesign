@@ -1,5 +1,6 @@
 package com.newsfeed.dtos;
 
+import com.newsfeed.models.VoteType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,4 +10,6 @@ public class PostDTO {
 
     private long postId;
     private String replyText;
+    private VoteType voteType;
+
 }
