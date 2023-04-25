@@ -1,6 +1,10 @@
 package com.newsfeed.services;
 
 import com.newsfeed.dtos.UserDTO;
+import com.newsfeed.exceptions.EmailAlreadyExistsException;
+import com.newsfeed.exceptions.IncorrectPasswordException;
+import com.newsfeed.exceptions.SelfFollowException;
+import com.newsfeed.exceptions.UserNotFoundException;
 import com.newsfeed.models.FollowerFollowing;
 import com.newsfeed.models.FollowerFollowingId;
 import com.newsfeed.models.User;
@@ -30,7 +34,13 @@ public class UserService {
      * userDTO User data transfer object containing user details.
      * return User object saved in the database.
      */
-    public User signUp(UserDTO userDTO) {
+    public User signUp(UserDTO userDTO) throws EmailAlreadyExistsException {
+
+        User existingUser = userRepository.findByEmail(userDTO.getEmail());
+        if (existingUser != null) {
+            throw new EmailAlreadyExistsException("Email already exists.");
+        }
+
         User user = new User();
         user.setName(userDTO.getName());
 
@@ -47,15 +57,20 @@ public class UserService {
      * userDTO User data transfer object containing user email and password.
      * return User object if authenticated, null otherwise.
      */
-    public User login(UserDTO userDTO) {
+    public User login(UserDTO userDTO) throws UserNotFoundException, IncorrectPasswordException {
         User user = userRepository.findByEmail(userDTO.getEmail());
         if (user != null) {
 
             if (passwordEncoder.matches(userDTO.getPassword(), user.getHashedPassword())) {
                 return user;
+            }else{
+                throw new IncorrectPasswordException("Incorrect password.");
             }
+        }else{
+            throw new UserNotFoundException("User not found.");
+
         }
-        return null;
+
     }
 
     /**
@@ -63,23 +78,24 @@ public class UserService {
      *
      * userDTO User data transfer object containing followUserEmail and currentUser.
      */
-    public void followUser(UserDTO userDTO) {
+    public void followUser(UserDTO userDTO) throws UserNotFoundException, SelfFollowException {
         User followUser = userRepository.findByEmail(userDTO.getFollowUserEmail());
 
         // If the user to be followed doesn't exist, print an error message and return
         if (followUser == null) {
 
-            System.out.println("The follow user does not exist");
-            return;
+
+            throw new UserNotFoundException("The follow user does not exist");
+
         }
 
         User currentUser = userDTO.getCurrentUser();
 
         // Check if the current user and follow user are the same and print a message if they are
         if(currentUser.getId() ==  followUser.getId()){
-            // throw exception in the future here
-            System.out.println("Current user and follow user are the same....");
-            return;
+
+            throw new SelfFollowException("Current user and follow user are the same.");
+
 
         }
 

@@ -2,6 +2,10 @@ package com.newsfeed.controllers;
 
 
 import com.newsfeed.dtos.UserDTO;
+import com.newsfeed.exceptions.EmailAlreadyExistsException;
+import com.newsfeed.exceptions.IncorrectPasswordException;
+import com.newsfeed.exceptions.SelfFollowException;
+import com.newsfeed.exceptions.UserNotFoundException;
 import com.newsfeed.models.User;
 import com.newsfeed.services.UserService;
 import com.newsfeed.singletons.Session;
@@ -28,7 +32,12 @@ public class UserController {
         userDTO.setEmail(email);
         userDTO.setName(name);
         userDTO.setPassword(password);
-        User user = userService.signUp(userDTO);
+        try {
+            User user = userService.signUp(userDTO);
+        } catch (EmailAlreadyExistsException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
 
         System.out.println("User created successfully........");
 
@@ -49,7 +58,16 @@ public class UserController {
         userDTO.setEmail(email);
 
 
-        User user = userService.login(userDTO);
+        User user = null;
+        try {
+            user = userService.login(userDTO);
+        } catch (UserNotFoundException e) {
+            System.out.println(e.getMessage());
+            return;
+        } catch (IncorrectPasswordException e){
+            System.out.println(e.getMessage());
+            return;
+        }
         if (user != null) {
             Session.getSession().setUser(user);
             System.out.println("Login successful........");
@@ -86,7 +104,13 @@ public class UserController {
         userDTO.setCurrentUser(user);
         userDTO.setFollowUserEmail(followUserEmail);
 
-        userService.followUser(userDTO);
+        try {
+            userService.followUser(userDTO);
+        } catch (UserNotFoundException e) {
+            System.out.println(e.getMessage());
+        } catch (SelfFollowException e){
+            System.out.println(e.getMessage());
+        }
 
 
     }
