@@ -58,12 +58,12 @@ public class CommentService {
     /**
      * Votes on a comment, either upvoting or downvoting.
      *
-     * postDTO Data transfer object containing the comment ID and the vote type.
+     * commentDTO Data transfer object containing the comment ID and the vote type.
      */
-    public void voteOnComment(CommentDTO postDTO) {
+    public void voteOnComment(CommentDTO commentDTO) {
 
         // Find the comment by ID
-        Optional<Comment> optionalComment = commentRepository.findById(postDTO.getCommentId());
+        Optional<Comment> optionalComment = commentRepository.findById(commentDTO.getCommentId());
         if (!optionalComment.isPresent()) {
             System.out.println("Comment not found");
             return;
@@ -76,10 +76,10 @@ public class CommentService {
         // If the user has already voted, update the vote type and vote counts
         if(optionalCommentVote.isPresent()) {
             CommentVote vote = optionalCommentVote.get();
-            if (vote.getVoteType() == postDTO.getVoteType()) {
+            if (vote.getVoteType() == commentDTO.getVoteType()) {
                 System.out.println("You have already voted on this comment in the same way");
             } else {
-                if (postDTO.getVoteType() == VoteType.UPVOTE) {
+                if (commentDTO.getVoteType() == VoteType.UPVOTE) {
                     comment.setUpVoteCount(comment.getUpVoteCount() + 1);
                     comment.setDownVoteCount(comment.getDownVoteCount() - 1);
                 } else {
@@ -87,7 +87,7 @@ public class CommentService {
                     comment.setDownVoteCount(comment.getDownVoteCount() + 1);
 
                 }
-                vote.setVoteType(postDTO.getVoteType());
+                vote.setVoteType(commentDTO.getVoteType());
                 voteRepository.save(vote);
                 commentRepository.save(comment);
             }
@@ -97,9 +97,9 @@ public class CommentService {
         // If the user hasn't voted yet, create a new vote and update the vote counts
         CommentVote commentVote = new CommentVote();
         commentVote.setComment(comment);
-        commentVote.setVoteType(postDTO.getVoteType());
+        commentVote.setVoteType(commentDTO.getVoteType());
         commentVote.setVoter(Session.getSession().getUser());
-        if (postDTO.getVoteType() == VoteType.UPVOTE) {
+        if (commentDTO.getVoteType() == VoteType.UPVOTE) {
             comment.setUpVoteCount(comment.getUpVoteCount() + 1);
         }else{
             comment.setDownVoteCount(comment.getDownVoteCount()+1);

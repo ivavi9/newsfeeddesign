@@ -41,15 +41,15 @@ public class CommentController {
             System.out.println("Invalid input. Usage: votecomment commentId");
             return;
         }
-        CommentDTO postDTO = new CommentDTO();
-        postDTO.setCommentId(Long.parseLong(userInput[1]));
+        CommentDTO commentDTO = new CommentDTO();
+        commentDTO.setCommentId(Long.parseLong(userInput[1]));
 
-        if(userInput[0] .equals("upvotecomment")) {
-            postDTO.setVoteType(VoteType.UPVOTE);
-        } else if (userInput[0].equals("downvotecomment")) {
-            postDTO.setVoteType(VoteType.DOWNVOTE);
+        if(userInput[0] .toLowerCase().equals("upvotecomment")) {
+            commentDTO.setVoteType(VoteType.UPVOTE);
+        } else if (userInput[0].toLowerCase().equals("downvotecomment")) {
+            commentDTO.setVoteType(VoteType.DOWNVOTE);
         }
-        commentService.voteOnComment(postDTO);
+        commentService.voteOnComment(commentDTO);
 
     }
 
